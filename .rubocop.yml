@@ -1,0 +1,10 @@
+Metrics/MethodLength:
+  CountComments: false
+  Max: 20
+
+Metrics/ModuleLength:
+  Exclude:
+    - lib/tiff_parser/ifd/ifd_record_headers.rb
+
+Style/BracesAroundHashParameters:
+  Enabled: false
