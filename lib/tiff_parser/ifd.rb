@@ -42,11 +42,15 @@ class TIFFParser
       @next_offset = @file.read_fields(IFD_NEXT, @first_rec_offset +
         (@records.count * self.class.record_size))[:next_offset]
 
+      load_referenced_ifds
+    end
+
+    def load_referenced_ifds
       # load up records in IFDs that are pointed to by special tags
       @records.select { |r| IFD_POINTERS.include? r.tag_name }.each do |rec|
         @records << IFD.new(@file, rec.data).records
       end
-      @records.flatten
+      @records.flatten!
     end
 
     def read_n_ifd_records(num_recs, first_offset)
