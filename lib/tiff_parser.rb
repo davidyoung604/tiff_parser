@@ -22,9 +22,6 @@ class TIFFParser
                   :Software, :SubjectDistanceRange, :WhiteBalance,
                   :FocalPlaneXResolution, :FocalPlaneYResolution].freeze
 
-  # fields that hold an offset to yet another IFD
-  REFERENCED_IFDS = [:ExifIFD, :GPSInfo, :SubIFDs].freeze
-
   def initialize(file_path)
     @path = file_path
     @file = PackTheBin.new(@path)
@@ -63,12 +60,5 @@ class TIFFParser
       @ifds << ifd
       break if ifd_offset.zero?
     end
-
-    load_referenced_ifds
-  end
-
-  def load_referenced_ifds
-    recs = all_ifd_records.select { |r| REFERENCED_IFDS.include? r.tag_name }
-    recs.each { |rec| @ifds << IFD.new(@file, rec.data) }
   end
 end

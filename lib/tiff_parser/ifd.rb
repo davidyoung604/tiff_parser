@@ -11,6 +11,9 @@ class TIFFParser
       { name: :next_offset, offset: 0, length: 4, type: :uint }
     ].freeze
 
+    # fields that hold an offset to yet another IFD
+    IFD_POINTERS = [:ExifIFD, :GPSInfo, :SubIFDs].freeze
+
     attr_reader :next_offset, :records
 
     # file should be a PackTheBin object
@@ -38,7 +41,12 @@ class TIFFParser
       @records = read_n_ifd_records(ifd_header[:num_records], @first_rec_offset)
       @next_offset = @file.read_fields(IFD_NEXT, @first_rec_offset +
         (@records.count * self.class.record_size))[:next_offset]
-      @records
+
+      # load up records in IFDs that are pointed to by special tags
+      @records.select { |r| IFD_POINTERS.include? r.tag_name }.each do |rec|
+        @records << IFD.new(@file, rec.data).records
+      end
+      @records.flatten
     end
 
     def read_n_ifd_records(num_recs, first_offset)
