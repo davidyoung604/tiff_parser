@@ -48,7 +48,7 @@ class TIFFParser
     def load_referenced_ifds
       # load up records in IFDs that are pointed to by special tags
       @records.select { |r| IFD_POINTERS.include? r.tag_name }.each do |rec|
-        @records << IFD.new(@file, rec.data).records
+        [rec.data].flatten.each { |d| @records << IFD.new(@file, d).records }
       end
       @records.flatten!
     end
