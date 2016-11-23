@@ -8,5 +8,5 @@ Gem::Specification.new do |s|
   s.authors     = ['David Young']
   s.files       = Dir['lib/**/*.rb', 'LICENCE', '*.md']
   s.license     = 'Nonstandard'
-  # s.homepage    = 'http://github.com/davidyoung604/tiff_parser'
+  s.homepage    = 'https://github.com/davidyoung604/tiff_parser'
 end
